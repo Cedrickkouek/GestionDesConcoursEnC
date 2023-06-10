@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 typedef struct {
     int ncin;
@@ -24,6 +25,10 @@ void saisir(void)
 {
     candidat can1;
     int i, newcni, trouver=0;
+    char autre[100];
+    bool etatnote[10];
+    bool verifnote;
+    float sum=0, moy=0;
     FILE *file;
     file=fopen("concours.txt", "at+");
 
@@ -55,7 +60,7 @@ void saisir(void)
 
     if(trouver==1)
     {
-        printf("\nL'Etudiant que vous souhaiter entrer existe déja !\n\n");
+        printf("\nL'Etudiant que vous souhaiter entrer existe déja !\n");
     }
     else
     {
@@ -67,15 +72,95 @@ void saisir(void)
         scanf("%s", can1.prenom);
 
         printf("\nVeuillez entrer les notes: \n");
-        for(i=1; i<=10; i++)
+        for(i=0; i<10; i++)
         {
+            printf("\n Entrez la note n° %d du candidat: \n", i);
             scanf("%f", &can1.notes[i]);
+            fscanf(file, "%f\n", &can1.notes[i]);
         }
 
-        printf("\nVeuillez entrer la decision sur le candidat : \n\n");
-        scanf("%s", can1.decison);
+        //printf("\nVeuillez entrer la decision sur le candidat : \n\n");
+        //scanf("%s", can1.decison);
 
-        fprintf(file, "%d\n%d\n%s\n%s\n%f\n%s\n", newcni, can1.age, can1.nom, can1.prenom, can1.notes[10], can1.decison);
+        //for(i=1; i<=10; i++)
+        //{
+            //scanf("%f\n", &can1.notes[i]);
+        //}
+
+        /* Ici c'est pour calculer la moyenne d'un candidat */
+        for(i=0; i<10; i++)
+        {
+            sum = sum + can1.notes[i];
+            moy = (sum/i);
+        }      
+
+        for(i=0; i<10; i++)
+        {
+            if(can1.notes[i]<10)
+            {
+                etatnote[i]=false;
+            }
+            else if(can1.notes[i]>=10)
+            {
+                etatnote[i]=true;
+            }
+        }
+
+        //for(i=0; i<10; i++)
+        //{
+            //if(can1.notes[i]<10)
+            //{
+                //etatnote=false;
+                //break;
+            //}
+            //else if(can1.notes[i]>=10)
+            //{
+                //etatnote=true;
+                //break;
+            //}
+        //}
+
+        for(i=0; i<10; i++)
+        {
+            if((moy>10) && (etatnote[i]==true))
+            {
+                verifnote=true;
+                continue;
+            }
+            //strcpy(can1.decison, "Admis");
+
+            else if((moy>10) && (etatnote[i]==false))
+            {
+                strcpy(can1.decison, "Ajourné");
+                verifnote=false;
+                break;
+            }
+
+            else /*if((moy<=10) && (etatnote[i]=false))*/
+            {
+                strcpy(can1.decison, "Refusé");
+                verifnote=false;
+                break;
+            }
+        }
+
+        if((moy>10) && (verifnote==true))
+        {
+            strcpy(can1.decison, "Admis");
+        }
+
+        strcpy(autre, "-----------------\n");
+        fprintf(file, "%s\n", autre);
+
+        fprintf(file, "%d\n%d\n%s\n%s\n", newcni, can1.age, can1.nom, can1.prenom);
+
+        for(i=0; i<10; i++)
+        {
+            fprintf(file, "%f\n", can1.notes[i]);
+        }
+        fprintf(file, "%s\n", can1.decison);
+        strcpy(autre, "-----------------\n");
+        fprintf(file, "%s\n", autre);
     }
     fclose(file);
 

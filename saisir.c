@@ -25,4 +25,31 @@ void saisir(void)
             scanf(c1.notes[i]);
         }
     }
+
+
+        //for(i=0; i<=10; i++)
+        //{
+          //  sum = sum + can1.notes[i];
+        //}
+
+        //moy = sum/10;
+
+        //for(i=1; i<=10; i++)
+        //{
+            //if(can1.notes[i]<10)
+            //{
+              //  etatnote=1;
+            //    break;
+          //  }
+        //}
+
+        //if((moy>=10) && (etatnote=0))
+        //{
+            //can1.decison = "ADMIS";
+          //  fscanf(file, "%s\n", can1.decison);
+        //}
+        //else if((moy>=10) && (etatnote=1))
+        //{
+          //  printf("\n Le candidat est A! \n\n");
+        //}
 }
