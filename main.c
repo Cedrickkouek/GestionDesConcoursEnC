@@ -20,17 +20,89 @@ typedef struct {
 candidat can1;
 
 //void rechercher(int cni);
+void modifcandidat(int cni);
 void saisir(void);
 int checkcni(int cni);
 void supprimer(int ncni);
 
 int main()
 {
+    modifcandidat(1234567);
     //saisir();
-    supprimer(1234567);
+    //supprimer(1234567);
     //rechercher(122132);
     return 0;
 }
+void modifcandidat(int cni)
+{
+    FILE *Prend, *F;
+    int i;
+    char rep = 'n';
+    printf("\nEntrez la CNI du Candidat à modifier :\n");
+    scanf("%d", &cni);
+    fflush(stdin);
+    if (checkcni(cni) == 1)
+    {
+        printf("Voulez vous vraiment modifier les informations de ce Candidat ? (o/n)");
+        scanf("%s", &rep);
+        fflush(stdin);
+
+        if(rep == 'o' || rep == 'O')
+        {
+            FILE *Prend, *F;
+
+            F = fopen("concours.txt", "a+");
+            Prend = fopen("tempcandidat.txt", "a+");
+            do
+            {
+                fscanf(F, "%d\n%d\n%s\n%s\n", &can1.ncin, &can1.age, can1.nom, can1.prenom /*&can1.notes[i], /*&can1.decision*/);
+                for(i=1; i<=10; i++)
+                {
+                    fscanf(F, "%f\n", &can1.notes[i]);
+                }
+        
+                fscanf(F, "%s\n", can1.decison);
+
+                if(cni == can1.ncin)
+                {
+                    can1.ncin = cni;
+                    printf("\nEntrez le nouvel age du candidat : \n");
+                    scanf("%d", &can1.age);
+                    printf("\nEntrez le nouveau nom du candidat : \n");
+                    scanf("%s", can1.nom);
+                    printf("\nEntrez le nouvel Prenom du candidat : \n");
+                    scanf("%s", can1.prenom);
+                    printf("\nVeuillez entrer les nouvelles notes: \n");
+                    
+                    for(i=0; i<10; i++)
+                    {
+                        printf("\n Entrez la nouvelle note n° %d du candidat: \n", i+1);
+                        scanf("%f", &can1.notes[i]); 
+                    }
+                    printf("\nEntrez la nouvelle decision sur le candidat : \n");
+                    scanf("%s", can1.decison);
+                    fflush(stdin);
+                }
+                fprintf(Prend, "%d\n%d\n%s\n%s\n", cni, can1.age, can1.nom, can1.prenom);
+
+                    for(i=0; i<10; i++)
+                    {
+                        fprintf(Prend, "%f\n", can1.notes[i]);
+                    }
+                fprintf(Prend, "%s\n", can1.decison);
+            } while (!feof(F));
+
+            fclose(Prend);
+            fclose(F);
+            remove("concours.txt");
+            rename("tempcandidat.txt", "concours.txt");
+            printf("\n La Modification a Reussi ✅! \n");
+        }
+    }
+}
+
+
+
 
 int checkcni(int cni)
 {
@@ -113,7 +185,7 @@ void supprimer(int ncni)
             fclose(F);
             remove("concours.txt");
             rename("temp_concours.txt", "concours.txt");
-            printf("\nSuppression effectuée avec succès\n");
+            printf("\nSuppression effectuée avec succès ✅\n");
         }
     }
     else
@@ -218,7 +290,7 @@ void saisir(void)
         printf("\nVeuillez entrer les notes: \n");
         for(i=0; i<10; i++)
         {
-            printf("\n Entrez la note n° %d du candidat: \n", i);
+            printf("\n Entrez la note n° %d du candidat: \n", i+1);
             scanf("%f", &can1.notes[i]);
             fscanf(file, "%f\n", &can1.notes[i]);
         }
