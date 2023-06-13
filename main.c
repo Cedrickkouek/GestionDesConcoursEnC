@@ -19,7 +19,8 @@ typedef struct {
 
 candidat can1;
 
-//void rechercher(int cni);
+void afficher();
+void admis(void);
 void modifcandidat(int cni);
 void saisir(void);
 int checkcni(int cni);
@@ -27,12 +28,62 @@ void supprimer(int ncni);
 
 int main()
 {
-    modifcandidat(1234567);
     //saisir();
+    admis();
+    //modifcandidat(1234567);
     //supprimer(1234567);
     //rechercher(122132);
     return 0;
 }
+
+void admis(void)
+{
+    int i;
+    
+    fflush(stdin);
+    FILE *P, *F;
+    P = fopen("concours.txt", "r");
+    F = fopen("admis.txt", "w");
+    char buffer[LINE_MAX];
+    int read_line = 15;
+
+    if(P == NULL)
+    {
+        printf("Impossible d'ouvrir le fichier");
+        return;
+    }
+
+    int current_line = 1;
+    do
+    {    
+        fgets(buffer, LINE_MAX, P);
+        fscanf(P, "%d\n%d\n%s\n%s\n", &can1.ncin, &can1.age, can1.nom, can1.prenom /*&can1.notes[i], /*&can1.decision*/);
+        for(i=1; i<=10; i++)
+        {
+            fscanf(P, "%f\n", &can1.notes[i]);
+        }
+        
+        fscanf(P, "%s\n", can1.decison);
+
+        if((current_line == read_line) && (buffer=="Admis"))
+        {
+            
+            fprintf(F, "%d\n%d\n%s\n%s\n", can1.ncin, can1.age, can1.nom, can1.prenom);
+
+            for(i=0; i<10; i++)
+            {
+                fprintf(F, "%f\n", can1.notes[i]);
+            }
+            fprintf(F, "%s\n", can1.decison);
+        }
+        current_line++;
+        
+    } while (!feof(P));
+    fclose(P);
+    fclose(F);
+    printf("\n Liste des canidats Admis créer avec succès ✅ \n");
+}
+
 void modifcandidat(int cni)
 {
     FILE *Prend, *F;
@@ -69,7 +120,7 @@ void modifcandidat(int cni)
                     printf("\nEntrez le nouvel age du candidat : \n");
                     scanf("%d", &can1.age);
                     printf("\nEntrez le nouveau nom du candidat : \n");
-                    scanf("%s", can1.nom);
+                    scanf("%s1024", can1.nom);
                     printf("\nEntrez le nouvel Prenom du candidat : \n");
                     scanf("%s", can1.prenom);
                     printf("\nVeuillez entrer les nouvelles notes: \n");
@@ -382,7 +433,7 @@ void saisir(void)
 
 }
 
-/**void rechercher(int cni)
+/**void afficher()
 {
     int i;
     //printf("Veuillez entrer le numero de CNI de l'etudiant à rechercher ?\n");
